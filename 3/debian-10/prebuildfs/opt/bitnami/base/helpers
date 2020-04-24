@@ -14,7 +14,7 @@
 #   `--log-level trace` flag is added to the command if `NAMI_DEBUG` env variable exists.
 #   The log level can be overriden using the `NAMI_LOG_LEVEL` env variable.
 #########################
-nami_initialize_one() {
+_one() {
     local module="${1:?module not specified}"
     if nami inspect $module | grep -q '"lifecycle": "unpacked"'; then
         local inputs=

@@ -23,8 +23,14 @@ RUN sed -i -e '/pam_loginuid.so/ s/^#*/#/' /etc/pam.d/cron
 RUN update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
+RUN apt-get update && \
+    apt-get install -y python-setuptools && \
+    apt-get install -y python-pip && \
+    pip install j2cli
 
 COPY rootfs /
+COPY custom/defaults.php.j2 /opt/bitnami/moodle/local/
+
 ENV ALLOW_EMPTY_PASSWORD="no" \
     APACHE_ENABLE_CUSTOM_PORTS="no" \
     APACHE_HTTPS_PORT_NUMBER="443" \
@@ -57,7 +63,10 @@ ENV ALLOW_EMPTY_PASSWORD="no" \
     SMTP_PASSWORD="" \
     SMTP_PORT="" \
     SMTP_PROTOCOL="" \
-    SMTP_USER=""
+    SMTP_USER="" \
+    MOODLE_CAS_HOSTNAME="cas.nexquare.io" \
+    MOODLE_CAS_BASEURI="cas" \
+    MOODLE_CAS_PORT="443"
 
 EXPOSE 80 443
 
